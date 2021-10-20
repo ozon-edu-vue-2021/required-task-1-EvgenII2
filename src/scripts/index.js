@@ -1,6 +1,6 @@
 'use strict';
 
-const action = document.querySelector('.action');
+const buttonLoadPictures = document.querySelector('.button');
 const templateImageCard = document.querySelector('#image');
 const templateImagePopup = document.querySelector('#popup-image');
 const container = document.querySelector('.images');
@@ -18,7 +18,7 @@ let loaderTimeout;
  * Отправляется первый запрос за картинками, юез параметров т.к. с дефолтными настройками.
  */
 const initialState = function () {
-    action.disabled = false;
+    buttonLoadPictures.disabled = false;
     getPictures();
 }
 
@@ -31,8 +31,8 @@ const initialState = function () {
 const getPictures = function (page = 1, limit = 10) {
     showLoader();
     fetch(`https://picsum.photos/v2/list?page=${page};limit=${limit}`)
-        .then(function (response) {return response.json()})
-        .then(function (result) {renderPictures(result)})
+        .then(function (response) { return response.json() })
+        .then(function (result) { renderPictures(result) })
 }
 
 /**
@@ -43,8 +43,8 @@ const getPictures = function (page = 1, limit = 10) {
 const getPictureInfo = function (id = 0) {
     showLoader();
     fetch(`https://picsum.photos/id/${id}/info`)
-        .then(function (response) {return response.json()})
-        .then(function (result) {renderPopupPicture(result)})
+        .then(function (response) { return response.json() })
+        .then(function (result) { renderPopupPicture(result) })
 }
 
 /**
@@ -60,10 +60,12 @@ const showLoader = function () {
  * Удаляет таймаут индикатора, ничего не возвращает.
  */
 const hideLoader = function () {
+
     loaderTimeout = setTimeout(function () {
         loader.style.visibility = 'hidden';
-        loaderTimeout.clearTimeout();
     }, 700);
+
+
 }
 
 /**
@@ -91,10 +93,10 @@ const renderPictures = function (list) {
         throw Error(`Pictures not defined. The list length: ${list.length}`);
     }
 
-    const clone = templateImageCard.content.cloneNode(true);
     const fragment = document.createDocumentFragment();
 
     list.forEach(function (element) {
+        const clone = templateImageCard.content.cloneNode(true);
         const link = clone.querySelector('a');
 
         link.href = element.url;
@@ -151,7 +153,8 @@ const togglePopup = function () {
  */
 const actionHandler = function (evt) {
     evt.preventDefault();
-    const nextPage = evt.currentTarget.dataset.page;
+
+    const nextPage = Number(evt.currentTarget.dataset.page);
     evt.currentTarget.dataset.page = nextPage + 1;
 
     if (nextPage > MAX_PAGE_IAMGES) {
@@ -170,13 +173,12 @@ const actionHandler = function (evt) {
  */
 const imageHandler = function (evt) {
     evt.preventDefault();
-
     if (evt.target.closest('a')) {
-        getPictureInfo(evt.target.dataset.id);
+        getPictureInfo(evt.target.closest('a').dataset.id);
     }
 }
 
-action.addEventListener('click', actionHandler);
+buttonLoadPictures.addEventListener('click', actionHandler);
 container.addEventListener('click', imageHandler);
 popupClose.addEventListener('click', togglePopup);
 
