@@ -37,7 +37,7 @@ const getPictures = function (page = 1, limit = 10) {
     .then(function (result) {
       renderPictures(result);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
@@ -56,9 +56,9 @@ const getPictureInfo = function (id = 0) {
     .then(function (result) {
       renderPopupPicture(result);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
-    });;
+    });
 };
 
 /**
